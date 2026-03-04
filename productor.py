@@ -4,12 +4,10 @@ from tools import write_cola, get_cola_size
 
 print(f"Productor iniciado en el proceso {os.getpid()}")
 
-contador = 0
 while True:
     time.sleep(2)
-    contador += 1
     
-    mensaje = f"Mensaje {contador}: Hola desde el productor"
+    mensaje = "Paco,20.Buenos dias"
     print(f"[PRODUCTOR] Escribiendo: {mensaje}")
     
     archivo = write_cola(mensaje)
