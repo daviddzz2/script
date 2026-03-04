@@ -1,34 +1,37 @@
 import os
+import time
+from datetime import datetime
 
 def write_cola(line):
-    fila_name = "cola.txt"
-    with open(fila_name, "a", encoding="utf-8") as file:
-        file.write(line + "\n")
+    """Crea un archivo con timestamp único"""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    filename = f"mensaje_{timestamp}.txt"
+    with open(filename, "w", encoding="utf-8") as file:
+        file.write(line)
+    return filename
 
 def read_and_delete_cola():
-    fila_name = "cola.txt"
+    """Lee el primer archivo mensaje creado y lo elimina"""
+    # Obtener lista de archivos de mensaje
+    archivos = [f for f in os.listdir(".") if f.startswith("mensaje_") and f.endswith(".txt")]
     
-    if not os.path.exists(fila_name):
+    if not archivos:
         return None
     
-    with open(fila_name, "r", encoding="utf-8") as file:
-        lines = file.readlines()
+    # Ordenar por nombre (que incluye timestamp) para obtener el primero creado
+    archivos.sort()
+    primer_archivo = archivos[0]
     
-    if not lines:
-        return None
+    # Leer contenido
+    with open(primer_archivo, "r", encoding="utf-8") as file:
+        contenido = file.read().strip()
     
-    first_line = lines[0].strip()
+    # Eliminar archivo
+    os.remove(primer_archivo)
     
-    with open(fila_name, "w", encoding="utf-8") as file:
-        file.writelines(lines[1:])
-    
-    return first_line
+    return contenido
 
 def get_cola_size():
-    fila_name = "cola.txt"
-    
-    if not os.path.exists(fila_name):
-        return 0
-    
-    with open(fila_name, "r", encoding="utf-8") as file:
-        return len(file.readlines())
+    """Retorna la cantidad de archivos de mensaje pendientes"""
+    archivos = [f for f in os.listdir(".") if f.startswith("mensaje_") and f.endswith(".txt")]
+    return len(archivos)

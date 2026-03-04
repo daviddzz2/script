@@ -1,6 +1,6 @@
 import time
 import os
-from tools import write_cola
+from tools import write_cola, get_cola_size
 
 print(f"Productor iniciado en el proceso {os.getpid()}")
 
@@ -12,8 +12,8 @@ while True:
     mensaje = f"Mensaje {contador}: Hola desde el productor"
     print(f"[PRODUCTOR] Escribiendo: {mensaje}")
     
-    write_cola(mensaje)
+    archivo = write_cola(mensaje)
+    print(f"[PRODUCTOR] Archivo creado: {archivo}")
     
-    with open("cola.txt", "r", encoding="utf-8") as f:
-        tamaño = len(f.readlines())
-    print(f"[PRODUCTOR] Tamaño de cola actual: {tamaño}")
+    tamaño = get_cola_size()
+    print(f"[PRODUCTOR] Cantidad de mensajes en cola: {tamaño}")
